@@ -7,7 +7,7 @@ import Starters from './screens/starters'; // Adjust the import paths accordingl
 import MainPage from './screens/main_page'; // Adjust the import paths accordingly
 import Dessert from './screens/dessert';
 import Login from './screens/login';
-import ChefEdit from './screens/chefedit';
+import ChefEdit from './chefedit';
 
 // Define the types for your stack
 type RootStackParamList = {
