@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, FlatList,  } from 'react-native';
+import { Picker } from '@react-native-picker/picker'; 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Picker } from '@react-native-picker/picker'; // Import the Picker component
-import initialMenuItems from './menu_list'; // Ensure the path to your menu items is correct
+import initialMenuItems from './menu_list';
 
 type RootStackParamList = {
   MainPage: undefined;
@@ -17,18 +17,16 @@ type RootStackParamList = {
 type ChefEditProps = NativeStackScreenProps<RootStackParamList, 'ChefEdit'>;
 
 const ChefEdit: React.FC<ChefEditProps> = ({ navigation }) => {
-  const [menuItems, setMenuItems] = useState(initialMenuItems); // State to manage menu items
+  const [menuItems, setMenuItems] = useState([...initialMenuItems]); // Use initialMenuItems for state
   const [newDishName, setNewDishName] = useState('');
   const [newDishDescription, setNewDishDescription] = useState('');
   const [newDishPrice, setNewDishPrice] = useState('');
-  const [newDishCourseType, setNewDishCourseType] = useState('starter'); // Default course type
+  const [newDishCourseType, setNewDishCourseType] = useState('starter');
 
-  // Function to handle deleting a dish
   const handleDelete = (name: string) => {
     setMenuItems(menuItems.filter(item => item.name !== name));
   };
 
-  // Function to handle adding a new dish
   const handleAddDish = () => {
     if (!newDishName || !newDishDescription || !newDishPrice || isNaN(Number(newDishPrice))) {
       alert("Please fill in all fields correctly.");
@@ -42,8 +40,7 @@ const ChefEdit: React.FC<ChefEditProps> = ({ navigation }) => {
       courseType: newDishCourseType,
     };
 
-    setMenuItems([...menuItems, newDish]);
-    // Reset the input fields
+    setMenuItems(prevMenuItems => [...prevMenuItems, newDish]); // Update state with the new dish
     setNewDishName('');
     setNewDishDescription('');
     setNewDishPrice('');
@@ -52,13 +49,12 @@ const ChefEdit: React.FC<ChefEditProps> = ({ navigation }) => {
   const renderMenuItem = ({ item }: { item: any }) => (
     <View style={styles.menuItem}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text>{item.description}</Text>
+      <Text style={styles.itemDescription}>{item.description}</Text>
       <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-      <Button title="Delete" onPress={() => handleDelete(item.name)} />
+      <Button title="Delete" onPress={() => handleDelete(item.name)} color="#FF4D4D" />
     </View>
   );
 
-  // Categories for course selection
   const courseCategories = ['starter', 'main', 'dessert'];
 
   return (
@@ -66,23 +62,11 @@ const ChefEdit: React.FC<ChefEditProps> = ({ navigation }) => {
       <Text style={styles.title}>Edit Courses</Text>
       <Text style={styles.description}>Here you can edit the courses.</Text>
 
-      {/* Course Selector */}
-      <ScrollView horizontal style={styles.courseSelector}>
-        {courseCategories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[styles.courseButton, newDishCourseType === category && styles.selectedCourse]}
-            onPress={() => setNewDishCourseType(category)}
-          >
-            <Text style={styles.courseButtonText}>{category.charAt(0).toUpperCase() + category.slice(1)}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
       <FlatList
-        data={menuItems.filter(item => item.courseType === newDishCourseType)} // Filter items by selected course type
+        data={menuItems.filter(item => item.courseType === newDishCourseType)}
         renderItem={renderMenuItem}
         keyExtractor={item => item.name}
+        style={styles.menuList}
       />
 
       <Text style={styles.addDishTitle}>Add New Dish</Text>
@@ -106,10 +90,9 @@ const ChefEdit: React.FC<ChefEditProps> = ({ navigation }) => {
         keyboardType="numeric"
       />
 
-      {/* Course Type Picker */}
       <Picker
         selectedValue={newDishCourseType}
-        onValueChange={(itemValue) => setNewDishCourseType(itemValue)}
+        onValueChange={setNewDishCourseType}
         style={styles.picker}
       >
         {courseCategories.map((category) => (
@@ -117,20 +100,25 @@ const ChefEdit: React.FC<ChefEditProps> = ({ navigation }) => {
         ))}
       </Picker>
 
-      <Button title="Add Dish" onPress={handleAddDish} />
+      <Button title="Add Dish" onPress={handleAddDish} color="#28A745" />
 
       <Button 
         title="Back" 
-        onPress={() => navigation.navigate('Home')} // Navigate back to Home
+        onPress={() => navigation.navigate('Home')}
+        color="#007BFF"
       />
     </View>
   );
 }
 
+// Styles remain unchanged
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f9f9f9', // Light background for better contrast
     alignItems: 'center',
     padding: 20,
   },
@@ -138,29 +126,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#333', // Dark text for readability
   },
   description: {
     fontSize: 16,
     marginBottom: 20,
     textAlign: 'center',
-  },
-  courseSelector: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
-  courseButton: {
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    marginRight: 10,
-    borderRadius: 5,
-  },
-  selectedCourse: {
-    backgroundColor: '#007BFF',
-  },
-  courseButtonText: {
-    fontSize: 16,
-    color: '#000',
+    color: '#666', // Softer color for description
   },
   menuItem: {
     marginBottom: 15,
@@ -168,10 +140,20 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     paddingBottom: 10,
     width: '100%',
+    padding: 15,
+    backgroundColor: '#ffffff', // White background for menu items
+    borderRadius: 8,
+    elevation: 2, // Shadow effect for menu items
   },
   itemName: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#007BFF', // Highlighted item name color
+  },
+  itemDescription: {
+    fontSize: 16,
+    color: '#555', // Softer color for item description
+    marginVertical: 5,
   },
   price: {
     fontSize: 16,
@@ -181,19 +163,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 20,
     marginBottom: 10,
+    color: '#333',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 45,
+    borderColor: '#007BFF',
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
     width: '100%',
+    borderRadius: 5, // Rounded corners for input fields
+    backgroundColor: '#fff',
+    elevation: 1, // Light shadow effect
   },
   picker: {
     height: 50,
     width: '100%',
     marginBottom: 10,
+    borderRadius: 5,
+    borderColor: '#007BFF',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    elevation: 1, // Light shadow effect
+  },
+  menuList: {
+    width: '100%',
   },
 });
 

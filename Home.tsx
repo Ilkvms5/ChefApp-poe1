@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Icon from 'react-native-vector-icons/Ionicons'; // Assuming you're using Ionicons
 
 // Define the types for stack navigation
 type RootStackParamList = {
   Home: undefined;
-  FullMenu: undefined; // Ensure this matches with what you have in App.tsx
-  Starters: undefined; // Add Starters to the stack param list
+  FullMenu: undefined;
+  Starters: undefined;
   MainPage: undefined;
   Dessert: undefined;
-  Login: undefined; // Add Login to your stack param list
+  Login: undefined;
 };
 
 type HomepageProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -17,51 +18,74 @@ type HomepageProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 const Homepage: React.FC<HomepageProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View >
-        <Text style={styles.title}>Welcome to the Home Page!</Text>
-        <Button
-          title="Full Menu"
-          onPress={() => navigation.navigate('FullMenu')}
-        />
-        <Button
-          title="Starters "
-          onPress={() => navigation.navigate('Starters')}
-        />
+      <Text style={styles.title}>Welcome!</Text>
+      <Text style={styles.subtitle}>Explore the Menu Below</Text>
 
-        <Button
-          title="Main"
-          onPress={() => navigation.navigate('MainPage')}
-        />
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FullMenu')}>
+        <Icon name="restaurant" size={20} color="#fff" style={styles.icon} />
+        <Text style={styles.buttonText}>Full Menu</Text>
+      </TouchableOpacity>
 
-        <Button 
-        title="Desserts" 
-        onPress={() => navigation.navigate('Dessert')} // Navigate to Dessert
-      />
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Starters')}>
+        <Icon name="fast-food" size={20} color="#fff" style={styles.icon} />
+        <Text style={styles.buttonText}>Starters</Text>
+      </TouchableOpacity>
 
-      <Button 
-        title="Chef Login" 
-        onPress={() => navigation.navigate('Login')} // Navigate to Dessert
-      />
-      </View>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MainPage')}>
+        <Icon name="pizza" size={20} color="#fff" style={styles.icon} />
+        <Text style={styles.buttonText}>Main Courses</Text>
+      </TouchableOpacity>
 
-      
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Dessert')}>
+        <Icon name="ice-cream" size={20} color="#fff" style={styles.icon} />
+        <Text style={styles.buttonText}>Desserts</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+        <Icon name="person" size={20} color="#fff" style={styles.icon} />
+        <Text style={styles.buttonText}>Chef Login</Text>
+      </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      backgroundColor: '#f9f9f9',
-    },
-    title: {
-      fontSize: 32,
-      fontWeight: 'bold',
-      marginBottom: 20,
-    },
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f2f3f5', 
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 24,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#6200EE', // Purple color
+    padding: 12,
+    borderRadius: 10,
+    width: '80%',
+    marginVertical: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '500',
+    marginLeft: 10,
+  },
+  icon: {
+    marginRight: 8,
+  },
+});
 
- export default Homepage;
+export default Homepage;

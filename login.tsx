@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
@@ -9,7 +9,7 @@ type RootStackParamList = {
   Home: undefined;
   Dessert: undefined;
   Login: undefined;
-  ChefEdit: undefined; // Include ChefEdit in the stack param list
+  ChefEdit: undefined; 
 };
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -49,14 +49,13 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         secureTextEntry
       />
       
-      <Button 
-        title="Log In" 
-        onPress={handleLogin} 
-      />
-      <Button 
-        title="Back" 
-        onPress={() => navigation.navigate('Home')} 
-      />
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.buttonText}>Back</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -64,28 +63,54 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f3f3',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
+    color: '#333',
     marginBottom: 10,
   },
   description: {
     fontSize: 16,
-    marginBottom: 20,
+    color: '#666',
     textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
+    borderRadius: 8,
     paddingLeft: 10,
+    marginBottom: 15,
     width: '100%',
+    backgroundColor: '#fff',
+  },
+  loginButton: {
+    backgroundColor: '#6200EE',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 10,
+  },
+  backButton: {
+    backgroundColor: '#888',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

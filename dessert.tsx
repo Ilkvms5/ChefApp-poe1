@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import initialMenuItems from './menu_list'; // Adjust the path as necessary
+import initialMenuItems from './menu_list'; 
 
-// Define the types for stack navigation
+// The types for stack navigation
 type RootStackParamList = {
   MainPage: undefined;
   FullMenu: undefined;
   Starters: undefined;
   Home: undefined;
-  Dessert: undefined; // Dessert type in stack param list
+  Dessert: undefined; 
 };
 
 type DessertProps = NativeStackScreenProps<RootStackParamList, 'Dessert'>;
@@ -18,25 +18,38 @@ const Dessert: React.FC<DessertProps> = ({ navigation }) => {
   // Filter the dessert items from the initial menu items
   const dessertItems = initialMenuItems.filter(item => item.courseType === 'dessert');
 
+  // Calculate the average price of dessert items
+  const averagePrice = dessertItems.length > 0
+    ? (dessertItems.reduce((sum, item) => sum + item.price, 0) / dessertItems.length).toFixed(2)
+    : '0.00';
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dessert Menu</Text>
       <Text style={styles.description}>Explore our delicious desserts!</Text>
+      
+      <Text style={styles.averagePrice}>Average Price: ${averagePrice}</Text>
 
-      <ScrollView>
-        {dessertItems.map(item => (
-          <View key={item.name} style={styles.menuItem}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text>{item.description}</Text>
-            <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-          </View>
-        ))}
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+        {dessertItems.length > 0 ? (
+          dessertItems.map(item => (
+            <View key={item.name} style={styles.menuItem}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemDescription}>{item.description}</Text>
+              <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noItemsText}>No desserts available at the moment.</Text>
+        )}
       </ScrollView>
 
-      <Button 
-        title="Back" 
-        onPress={() => navigation.navigate('Home')} // Navigate back to Home
-      />
+      <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Text style={styles.backButtonText}>Back</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -44,35 +57,84 @@ const Dessert: React.FC<DessertProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f3f3',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
     marginBottom: 10,
   },
   description: {
     fontSize: 16,
-    marginBottom: 20,
+    color: '#666',
     textAlign: 'center',
+    marginBottom: 20,
+  },
+  averagePrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#8B0000',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  scrollContainer: {
+    width: '100%',
+  },
+  scrollContent: {
+    paddingBottom: 30,
   },
   menuItem: {
-    marginBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingBottom: 10,
-    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, 
   },
   itemName: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    color: '#333',
+  },
+  itemDescription: {
+    fontSize: 14,
+    color: '#555',
+    marginVertical: 5,
   },
   price: {
     fontSize: 16,
-    color: 'green',
+    fontWeight: 'bold',
+    color: '#8B0000',
+    marginTop: 5,
+  },
+  noItemsText: {
+    fontSize: 16,
+    color: '#888',
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  backButton: {
+    backgroundColor: '#6200EE',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 15,
+    width: '60%',
+  },
+  backButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
